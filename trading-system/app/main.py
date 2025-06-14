@@ -1,48 +1,12 @@
-from fastapi import FastAPI, HTTPException
-import uvicorn
-import os
-from datetime import datetime
-
-app = FastAPI(title="Cloud Trading System", version="1.0.0")
-
-@app.get("/")
-async def root():
-    return {
-        "service": "Cloud Trading System",
-        "status": "operational",
-        "timestamp": datetime.now().isoformat()
-    }
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
-
-@app.post("/webhook/tradingview")
-async def tradingview_webhook(signal: dict):
-    """Receive TradingView webhook signals"""
-    print(f"📈 Signal received: {signal}")
-    
-    # Log the signal (in production, you'd process it)
-    with open("trading_log.txt", "a") as f:
-        f.write(f"{datetime.now()}: {signal}\n")
-    
-    return {
-        "status": "received",
-        "message": "Signal logged successfully",
-        "signal": signal
-    }
-
-if __name__ == "__main__":
-    port = int(os.getenv('PORT', 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
-from fastapi import FastAPI, HTTPException
-import uvicorn
-import os
+from fastapi import FastAPI
+import asyncio
 import json
-import pandas as pd
+import os
 from datetime import datetime
 from typing import Dict, List
-import asyncio
+
+import pandas as pd
+import uvicorn
 
 app = FastAPI(title="AI Trading System", version="1.0.0")
 
